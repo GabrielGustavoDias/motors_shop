@@ -1,11 +1,9 @@
-import React, { createContext, useEffect, useState } from "react";
-import { carsObjectMock, mockedUserSeller } from "../mocks";
-import { IUser } from "../interfaces";
+import React, { createContext, useState } from "react";
 import { ICar } from "../interfaces/carsInterface";
 import { instanceMotorsShop } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import { ILoginUser, IUserResponse } from "../interfaces/userInterfaces";
-import { emit } from "process";
+import { toast } from "react-toastify";
 
 interface IUserProviderProps {
   user: IUserResponse | null;
@@ -52,6 +50,7 @@ export const UserProvider = ({ children }) => {
   const logout = (): void => {
     setUser(null);
     localStorage.removeItem("@access_token");
+    toast.error("Please login again");
   };
 
   const login = async (data: ILoginUser) => {
@@ -61,7 +60,8 @@ export const UserProvider = ({ children }) => {
       localStorage.setItem("@access_token", token);
       navigate("/profile");
     } catch (error) {
-      console.error(error);
+      toast.error("Verify the given informations and try again!");
+      localStorage.clear();
     }
   };
 
@@ -80,8 +80,9 @@ export const UserProvider = ({ children }) => {
     try {
       await instanceMotorsShop.post("/users", data);
       navigate("/login");
+      toast.success("Registration done successfully ");
     } catch (error) {
-      console.error(error);
+      toast.error("Entered data already registered");
     }
   };
 
@@ -92,8 +93,10 @@ export const UserProvider = ({ children }) => {
       localStorage.removeItem("@access_token");
       setUser(null);
       navigate("/");
+      toast.success("Your account has been deleted");
     } catch (error) {
       console.error(error);
+      toast.error("Error please try again later");
     }
   };
 
@@ -131,10 +134,10 @@ export const UserProvider = ({ children }) => {
 
   const sendEmail = async (email: string) => {
     try {
-      console.log({ email });
       await instanceMotorsShop.post("/users/resetPassword", { email });
+      toast.success("Check your email");
     } catch (error) {
-      console.error(error);
+      toast.error("Please insert a valid email");
     }
   };
 
@@ -143,8 +146,10 @@ export const UserProvider = ({ children }) => {
       await instanceMotorsShop.patch(`/users/resetPassword/${resetToken}`, {
         password,
       });
+      toast.success("Password changed successfully");
+      navigate("/login");
     } catch (error) {
-      console.error(error);
+      toast.error("Please try again later");
     }
   };
 
@@ -163,10 +168,6 @@ export const UserProvider = ({ children }) => {
     const adList = response.data;
     setCars(adList);
   };
-
-  // useEffect(() => {
-  //   listAdvertisement();
-  // }, [cars, navigator]);
 
   return (
     <UserContext.Provider
