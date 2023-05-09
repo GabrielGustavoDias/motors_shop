@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router";
+import { Route, Routes, Navigate } from "react-router";
 import { ProtectedRoutes } from "../components";
 
 import {
@@ -15,7 +15,7 @@ import { RecoverPass } from "../pages/recoverPassPage";
 export const RoutesMain = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route element={<ProtectedRoutes />}>
@@ -27,6 +27,7 @@ export const RoutesMain = () => {
       />
       <Route path="/advertisement/:id" element={<AdDetailPage />} />
       <Route path="/users/:id" element={<SellerPage />} />
+      <Route path="*" element={<Navigate replace to="/home" />} />
     </Routes>
   );
 };
