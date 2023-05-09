@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
     :root {
@@ -85,4 +85,12 @@ export const GlobalStyle = createGlobalStyle`
         border: none;
         border-radius: 4px;
     }
+    figure{
+        width: 100%;
+    }
+
+`;
+export const DivMain = styled.div`
+  height: 100%;
+  width: 100%;
 `;
